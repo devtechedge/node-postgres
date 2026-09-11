@@ -4,6 +4,13 @@ const assert = require('assert')
 const net = require('net')
 const suite = new helper.Suite()
 
+// These tests target the pure-JS connection state machine: `_ending` lives on
+// `Connection` and is only consulted by the JS `reportStreamError`. The native
+// (libpq) client has no such property, so there is nothing to assert here.
+if (helper.args.native) {
+  return
+}
+
 // https://github.com/brianc/node-postgres/issues/3769
 //
 // `Connection.prototype.sync()` used to set `_ending = true`. Sync is the
